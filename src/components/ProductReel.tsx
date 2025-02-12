@@ -18,7 +18,13 @@ const ProductReel = (props: ProductReelProps) => {
   const { title, subtitle, href, query } = props;
 
   const { data: queryResults, isLoading } =
-    trpc.getInfiniteProducts.useInfiniteQuery(
+    trpc.getInfiniteProducts.useInfiniteQuery<
+      {
+        products: Product[];
+        nextPage?: number;
+      },
+      Error
+    >(
       {
         limit: query.limit ?? FALLBACK_LIMIT,
         query,
@@ -28,7 +34,7 @@ const ProductReel = (props: ProductReelProps) => {
       }
     );
 
-  console.log(queryResults);
+  const products = queryResults?.pages.flatMap((page) => page.items);
 
   return (
     <section className="py-12">
@@ -40,14 +46,14 @@ const ProductReel = (props: ProductReelProps) => {
             </h2>
           ) : null}
           {subtitle ? (
-            <p className="mt-2 text-sm text-muted-foreground">{subtitle}</p>
+            <p className="text-muted-foreground mt-2 text-sm">{subtitle}</p>
           ) : null}
         </div>
 
         {href ? (
           <Link
             href={href}
-            className="hidden text-sm font-medium text-primary hover:text-blue-700 md:block"
+            className="text-primary hidden text-sm font-medium hover:text-blue-700 md:block"
           >
             Ver coleção <span aria-hidden="true">→</span>
           </Link>

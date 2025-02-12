@@ -68,6 +68,21 @@ export const appRouter = t.router({
       throw new Error(`Erro ao buscar produtos: ${error.message}`);
     }
   }),
+
+  getProductsById: publicProcedure
+    .input(z.string())
+    .query(async ({ input, ctx }) => {
+      const product = await ctx.payload.findByID({
+        collection: "products",
+        id: input,
+      });
+
+      if (!product) {
+        throw new Error("Produto não encontrado");
+      }
+
+      return product;
+    }),
 });
 
 export type AppRouter = typeof appRouter;

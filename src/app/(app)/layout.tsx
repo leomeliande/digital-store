@@ -3,9 +3,11 @@ import { ReactNode } from "react";
 import { Geist } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
-import Navbar from "@/components/Navbar";
-import TrpcProvider from "@/components/Providers";
+import Providers from "@/components/Providers";
 import { Toaster } from "sonner";
+import Footer from "@/components/Footer";
+import GoToTop from "@/components/GoToTop";
+import Header from "@/components/Header";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,14 +27,18 @@ export default function RootLayout({
   return (
     <html lang="pt-br" className="h-full">
       <body className={cn("relative h-full antialiased", geistSans.className)}>
-        <main className="relative flex min-h-screen flex-col">
-          <TrpcProvider>
-            <Navbar />
-            <div className="flex-1 flex-grow">{children}</div>
-          </TrpcProvider>
-        </main>
+        <Providers>
+          <Header />
 
-        <Toaster position="top-center" richColors />
+          <main className="relative flex min-h-screen flex-col">
+            <div className="flex-1 grow">{children}</div>
+            <GoToTop />
+          </main>
+
+          <Footer />
+
+          <Toaster position="top-center" richColors />
+        </Providers>
       </body>
     </html>
   );

@@ -7,36 +7,34 @@ import React, { useMemo } from "react";
 import { Product } from "@/payload-types";
 import Link from "next/link";
 
-const ProductItem = React.memo(
-  ({ product }: { product: Product; isLoading: boolean }) => {
-    const validUrls = product.images
-      .map(({ image }) => (typeof image === "string" ? image : image.url))
-      .filter(Boolean) as string[];
+const ProductItem = React.memo(({ product }: { product: Product }) => {
+  const validUrls = product.images
+    .map(({ image }) => (typeof image === "string" ? image : image.url))
+    .filter(Boolean) as string[];
 
-    return (
-      <li
-        className="flex flex-1 flex-col items-center justify-center gap-4"
-        key={product.id}
-      >
-        <Link href={`/product/${product.id}`}>
-          {validUrls.map((url) => (
-            <Image
-              key={url}
-              src={url || ""}
-              alt={product.name}
-              width={500}
-              height={300}
-              layout="responsive"
-              className="relative mb-4 h-48 w-full overflow-hidden rounded-lg border-2 border-gray-100"
-            />
-          ))}
-          <h3 className="text-lg font-semibold">{product.name}</h3>
-          <p>{formatPrice(product.price)}</p>
-        </Link>
-      </li>
-    );
-  }
-);
+  return (
+    <li
+      className="flex flex-1 flex-col items-center justify-center gap-4"
+      key={product.id}
+    >
+      <Link href={`/product/${product.id}`}>
+        {validUrls.map((url) => (
+          <Image
+            key={url}
+            src={url || ""}
+            alt={product.name}
+            width={500}
+            height={300}
+            layout="responsive"
+            className="relative mb-4 h-48 w-full overflow-hidden rounded-lg border-2 border-gray-100"
+          />
+        ))}
+        <h3 className="text-lg font-semibold">{product.name}</h3>
+        <p>{formatPrice(product.price)}</p>
+      </Link>
+    </li>
+  );
+});
 
 ProductItem.displayName = "ProductItem";
 
@@ -57,20 +55,22 @@ const PlaceholderList = ({ length }: { length: number }) => (
 );
 
 const Products = () => {
-  const { data, isLoading } = trpc.getProducts.useQuery();
+  const { data, isLoading, error } = trpc.getProducts.useQuery();
 
   const productList = useMemo(() => {
     return data?.map((product: Product) => (
-      <ProductItem key={product.id} product={product} isLoading={isLoading} />
+      <ProductItem key={product.id} product={product} />
     ));
-  }, [data, isLoading]);
+  }, [data]);
+
+  if (error) {
+    return <div>Erro ao carregar produtos: {error.message}</div>;
+  }
 
   return (
     <div className="flex w-full flex-col items-center justify-center py-16">
       {isLoading ? (
-        <>
-          <PlaceholderList length={(data && data.length) || 3} />
-        </>
+        <PlaceholderList length={3} />
       ) : (
         <ul className="flex gap-4">{productList}</ul>
       )}

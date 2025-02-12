@@ -1,9 +1,9 @@
 import Link from "next/link";
-import MaxWidthWrapper from "./MaxWidthWrapper";
+import Wrapper from "./Wrapper";
 import { Icons } from "./Icons";
 import NavItems from "./NavItems";
 import { buttonVariants } from "./ui/button";
-import Cart from "./Cart";
+import { Cart } from "./Cart";
 import { getServerSideUser } from "@/lib/payload-utils";
 import { cookies } from "next/headers";
 import UserAccountNav from "./UserAccountNav";
@@ -15,7 +15,7 @@ const Navbar = async () => {
   return (
     <div className="sticky inset-x-0 top-0 z-50 h-16 bg-white shadow-md">
       <header className="relative bg-white">
-        <MaxWidthWrapper>
+        <Wrapper>
           <div>
             <div className="flex h-16 items-center">
               {/* TODO: Mobile */}
@@ -76,7 +76,7 @@ const Navbar = async () => {
               </div>
             </div>
           </div>
-        </MaxWidthWrapper>
+        </Wrapper>
       </header>
     </div>
   );

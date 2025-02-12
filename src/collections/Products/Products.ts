@@ -5,8 +5,6 @@ import { CollectionBeforeChangeHook, CollectionConfig } from "payload";
 const addUser: CollectionBeforeChangeHook<Product> = ({ req, data }) => {
   const user = req.user as User;
 
-  console.log(user);
-
   return { ...data, user: user?.id };
 };
 
